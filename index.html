@@ -1,84 +1,971 @@
-<head>
-<link href="https://fonts.googleapis.com/css?family=Economica" rel="stylesheet">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/simplecartjs/3.0.5/simplecart.min.js'></script>
+<!DOCTYPE html>
+ <html lang="pt-BR" class="light">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Lab - Monte Seu Café Personalizado</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <style>
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .swiper-slide:hover {
+            transform: scale(1.03);
+        }
+        
+        .coffee-card {
+            transition: all 0.3s ease;
+        }
+        
+        .coffee-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .coffee-card {
+            background-color: #1f2937;
+            border-color: #374151;
+        }
+        
+        .dark .coffee-card:hover {
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.05);
+        }
+        
+        .theme-toggle {
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #78350f;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .dark .nav-link:after {
+            background-color: #92400e;
+        }
 
+        /*Customização de café*/
+        .customization-option {
+            transition: all 0.2s ease;
+        }
+        
+        .customization-option:hover {
+            transform: translateY(-2px);
+        }
+        
+        .customization-option.selected {
+            border-color: #92400e;
+            background-color: #fef3c7;
+        }
+        
+        .dark .customization-option.selected {
+            border-color: #92400e;
+            background-color: #78350f;
+        }
+        
+        #preview-cup {
+            transition: all 0.5s ease;
+        }
+        
+        .progress-step {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        .progress-step.active {
+            background-color: #92400e;
+            color: white;
+        }
+        
+        .progress-step.completed {
+            background-color: #78350f;
+            color: white;
+        }
+        
+        .progress-connector {
+            flex: 1;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .progress-connector.active {
+            background-color: #92400e;
+        }
+        
+        .progress-connector.completed {
+            background-color: #78350f;
+        }
+        
+        /* Estilos para o carrossel */
+        .swiper-button-next, 
+        .swiper-button-prev {
+            color: #92400e;
+            background-color: rgba(255, 255, 255, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .swiper-button-next:hover, 
+        .swiper-button-prev:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .swiper-button-next:after, 
+        .swiper-button-prev:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .dark .swiper-button-next,
+        .dark .swiper-button-prev {
+            color: #92400e;
+            background-color: rgba(31, 41, 55, 0.7);
+        }
+        
+        .dark .swiper-button-next:hover,
+        .dark .swiper-button-prev:hover {
+            background-color: rgba(31, 41, 55, 0.9);
+        }
+
+        /* Dark mode */
+        .dark {
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+
+        .dark .bg-white {
+            background-color: #1f2937;
+        }
+
+        .dark .text-gray-800 {
+            color: #f3f4f6;
+        }
+
+        .dark .text-gray-600 {
+            color: #d1d5db;
+        }
+
+        .dark .border-gray-100 {
+            border-color: #374151;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #1f2937;
+        }
+
+        .dark .bg-amber-50 {
+            background-color: #1f2937;
+        }
+
+        .dark .bg-amber-100 {
+            background-color: #78350f;
+        }
+
+        .dark .text-amber-800 {
+            color: #f59e0b;
+        }
+
+        .dark .bg-amber-800 {
+            background-color: #92400e;
+        }
+
+        .dark .hover\:bg-amber-900:hover {
+            background-color: #7c2d12;
+        }
+
+        .dark .border-amber-600 {
+            border-color: #92400e;
+        }
+
+        .dark .text-amber-600 {
+            color: #f59e0b;
+        }
+
+        .dark .bg-gradient-to-b {
+            background-image: linear-gradient(to bottom, #78350f, #92400e);
+        }
+
+        .dark .border-amber-300 {
+            border-color: #92400e;
+        }
+
+        .dark .bg-amber-200 {
+            background-color: #92400e;
+        }
+
+        .dark .bg-amber-900 {
+            background-color: #7c2d12;
+        }
+
+        .dark .text-amber-300 {
+            color: #f59e0b;
+        }
+
+        .dark .bg-gray-700 {
+            background-color: #1f2937;
+        }
+
+        .dark .border-gray-600 {
+            border-color: #374151;
+        }
+
+        .dark .bg-gray-800 {
+            background-color: #111827;
+        }
+
+        .dark .bg-gray-800\/80 {
+            background-color: rgba(17, 24, 39, 0.8);
+        }
+
+        .dark .bg-white\/80 {
+            background-color: rgba(31, 41, 55, 0.8);
+        }
+
+        .dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
-<nav>
-  <ul>
-    <li id='logo' style='padding-top:'> COFFEE LAB</li>
-    <li class = 'nav-style' ><a href='https://s.codepen.io/vperr007/debug/oWNyRR/PNrvYLNyjERM' ><i class="fa fa-cart-plus" id='cart-icon' aria-hidden="true"></a></i></li>
-    <li class = 'nav-style'><a href='#'>ABOUT US</a></li>
-    <li class = 'nav-style'><a href='#'>FUTURE PRODUCTS</a></li>
-    <li class = 'nav-style'  id='shop'><a href='https://s.codepen.io/vperr007/debug/vmBwJo/yokZEQbYXnyA'>SHOP </a></li>
-    <li class='nav-style'><a href='https://codepen.io/vperr007/full/pPzYZG/'>HOME</a></li>
-  </ul>
-</nav>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-amber-900 flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-amber-900 dark:text-amber-600">Coffee Lab</h1>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="nav-link font-medium">Início</a>
+                <a href="#" class="nav-link font-medium">Nossos Cafés</a>
+                <a href="#custom-coffee" class="nav-link font-medium">Monte Seu Café</a>
+                <a href="#" class="nav-link font-medium">Sobre Nós</a>
+                <a href="#" class="nav-link font-medium">Contato</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="theme-toggle p-2 rounded-full bg-gray-100 dark:bg-gray-700">
+                    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                
+                <button class="md:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
 
-<div class='main'>
+    <section class="relative py-16 md:py-24">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Descubra o <span class="text-amber-800 dark:text-amber-600">verdadeiro sabor</span> do café</h2>
+                <p class="text-lg mb-8 text-gray-600 dark:text-gray-300">No Coffee Lab, transformamos grãos selecionados em experiências sensacionais únicas. Cada xícara é uma jornada de aromas e sabores cuidadosamente elaborados por nossos mestres baristas.</p>
+                <div class="flex space-x-4">
+                    <button class="bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-medium transition-colors">Explorar Menu</button>
+                    <button class="border border-amber-800 text-amber-800 dark:text-amber-600 dark:border-amber-600 hover:bg-amber-50 dark:hover:bg-gray-800 px-6 py-3 rounded-lg font-medium transition-colors">Reservar Mesa</button>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative">
+                <div class="swiper max-w-md mx-auto">
+                    <div class="swiper-wrapper">
+                        <!-- Slide 1 - Latte -->
+                        <div class="swiper-slide">
+                            <img src=" /*imagem Latte*/ " alt="Latte" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                        <!-- Slide 2 - Cappuccino -->
+                        <div class="swiper-slide">
+                            <img src=" /*imagem Cappuccino*/ " alt="Cappuccino" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                        <!-- Slide 3 - Expresso -->
+                        <div class="swiper-slide">
+                            <img src=" /*imagem Expresso*/ " alt="Expresso" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                        <!-- Slide 4 - Mocha -->
+                        <div class="swiper-slide">
+                            <img src=" /*imagem Mocha*/ " alt="Mocha" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                        <!-- Slide 5 - Frappuccino -->
+                        <div class="swiper-slide">
+                            <img src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Frappuccino" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                        <!-- Slide 6 - Affogato -->
+                        <div class="swiper-slide">
+                            <img src=" /*imagem Affogato*/ " alt="Affogato" class="rounded-xl shadow-xl w-full h-96 object-cover">
+                        </div>
+                    </div>
+                    <!-- Botões de Personalização -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <!-- Add Paginação -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div id='sidenav'>
-    <p style='font-size:25px'>SHOP</p>
-    <a href='#' data-name='French'></a>
-    <a href='#' >Frappuccino</a>
-    <a href='#'>Affogato</a>
-    <a href='#'>Macchiato</a>
-    <a href='#'>Expresso</a>
-    <a href='#'>Cappuccino</a>
-    <a href='#'>Latte</a>
-  </div>
+    <!-- Customização do Coffee -->
+    <section id="custom-coffee" class="py-16 bg-amber-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Monte Seu <span class="text-amber-800 dark:text-amber-600">Café Perfeito</span></h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">Personalize cada detalhe do seu café para criar a experiência perfeita para seu paladar.</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Personalização -->
+                <div class="lg:w-1/2 bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6">
+                    <!-- Progresso -->
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex flex-col items-center">
+                            <div id="step-1" class="progress-step active">1</div>
+                            <span class="text-xs mt-1">Tamanho</span>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="flex flex-col items-center">
+                            <div id="step-2" class="progress-step">2</div>
+                            <span class="text-xs mt-1">Grão</span>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="flex flex-col items-center">
+                            <div id="step-3" class="progress-step">3</div>
+                            <span class="text-xs mt-1">Leite</span>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="flex flex-col items-center">
+                            <div id="step-4" class="progress-step">4</div>
+                            <span class="text-xs mt-1">Adicionais</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 1: Seleção do tamanho -->
+                    <div id="size-step" class="step-content">
+                        <h3 class="text-xl font-bold mb-4">Escolha o tamanho do seu café</h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button class="customization-option p-4 border rounded-lg text-center" data-size="200" data-price="12.90">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">200ml</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Pequeno</div>
+                                <div class="text-sm mt-2">R$ 12,90</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center selected" data-size="300" data-price="15.90">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">300ml</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Médio</div>
+                                <div class="text-sm mt-2">R$ 15,90</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-size="400" data-price="18.90">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">400ml</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Grande</div>
+                                <div class="text-sm mt-2">R$ 18,90</div>
+                            </button>
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button class="opacity-0 cursor-default px-4 py-2"></button>
+                            <button id="next-to-grain" class="bg-amber-800 hover:bg-amber-900 text-white px-6 py-2 rounded-lg font-medium transition-colors">Próximo</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Seleção de Grãos -->
+                    <div id="grain-step" class="step-content hidden">
+                        <h3 class="text-xl font-bold mb-4">Escolha o grão do seu café</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="customization-option p-4 border rounded-lg text-center" data-grain="arabica" data-price="0">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Arábica</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Suave e aromático</div>
+                                <div class="text-sm mt-2">+ R$ 0,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center selected" data-grain="robusta" data-price="2.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Robusta</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Forte e encorpado</div>
+                                <div class="text-sm mt-2">+ R$ 2,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-grain="blue-mountain" data-price="5.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Blue Mountain</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Premium e equilibrado</div>
+                                <div class="text-sm mt-2">+ R$ 5,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-grain="kopi-luwak" data-price="15.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Kopi Luwak</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Raro e exótico</div>
+                                <div class="text-sm mt-2">+ R$ 15,00</div>
+                            </button>
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button id="back-to-size" class="border border-amber-800 text-amber-800 dark:text-amber-600 dark:border-amber-600 hover:bg-amber-50 dark:hover:bg-gray-800 px-6 py-2 rounded-lg font-medium transition-colors">Voltar</button>
+                            <button id="next-to-milk" class="bg-amber-800 hover:bg-amber-900 text-white px-6 py-2 rounded-lg font-medium transition-colors">Próximo</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Seleção de Leite -->
+                    <div id="milk-step" class="step-content hidden">
+                        <h3 class="text-xl font-bold mb-4">Escolha o tipo de leite</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="customization-option p-4 border rounded-lg text-center selected" data-milk="integral" data-price="0">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Integral</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Cremoso e tradicional</div>
+                                <div class="text-sm mt-2">+ R$ 0,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-milk="semidesnatado" data-price="0">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Semidesnatado</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Menos gordura</div>
+                                <div class="text-sm mt-2">+ R$ 0,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-milk="amendoas" data-price="3.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Amêndoas</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Leve e nutritivo</div>
+                                <div class="text-sm mt-2">+ R$ 3,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-milk="aveia" data-price="3.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Aveia</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Cremoso e doce</div>
+                                <div class="text-sm mt-2">+ R$ 3,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-milk="soja", data-price="2.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Soja</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Neutro e versátil</div>
+                                <div class="text-sm mt-2">+ R$ 2,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-milk="coco" data-price="4.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Coco</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Exótico e aromático</div>
+                                <div class="text-sm mt-2">+ R$ 4,00</div>
+                            </button>
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button id="back-to-grain" class="border border-amber-800 text-amber-800 dark:text-amber-600 dark:border-amber-600 hover:bg-amber-50 dark:hover:bg-gray-800 px-6 py-2 rounded-lg font-medium transition-colors">Voltar</button>
+                            <button id="next-to-extras" class="bg-amber-800 hover:bg-amber-900 text-white px-6 py-2 rounded-lg font-medium transition-colors">Próximo</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Seleção Adicionais -->
+                    <div id="extras-step" class="step-content hidden">
+                        <h3 class="text-xl font-bold mb-4">Adicionais (opcional)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="canela" data-price="1.50">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Canela</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Aroma quente</div>
+                                <div class="text-sm mt-2">+ R$ 1,50</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="chocolate" data-price="2.50">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Chocolate</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Doce e cremoso</div>
+                                <div class="text-sm mt-2">+ R$ 2,50</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="baunilha" data-price="2.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Baunilha</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Aroma suave</div>
+                                <div class="text-sm mt-2">+ R$ 2,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="caramelo" data-price="2.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Caramelo</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Doce e cremoso</div>
+                                <div class="text-sm mt-2">+ R$ 2,00</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="menta" data-price="1.50">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Menta</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Refrescante</div>
+                                <div class="text-sm mt-2">+ R$ 1,50</div>
+                            </button>
+                            <button class="customization-option p-4 border rounded-lg text-center" data-extra="nozes" data-price="3.00">
+                                <div class="text-amber-800 dark:text-amber-600 font-bold mb-1">Nozes</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300">Aveludado</div>
+                                <div class="text-sm mt-2">+ R$ 3,00</div>
+                            </button>
+                        </div>
+                        <div class="mt-6 flex justify-between">
+                            <button id="back-to-milk" class="border border-amber-800 text-amber-800 dark:text-amber-600 dark:border-amber-600 hover:bg-amber-50 dark:hover:bg-gray-800 px-6 py-2 rounded-lg font-medium transition-colors">Voltar</button>
+                            <button id="finish-customization" class="bg-amber-800 hover:bg-amber-900 text-white px-6 py-2 rounded-lg font-medium transition-colors">Finalizar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Previa Coffee -->
+                <div class="lg:w-1/2 bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">Seu Café Personalizado</h3>
+                    
+                    <div class="flex flex-col items-center justify-center mb-6">
+                        <div id="preview-cup" class="w-48 h-64 bg-gradient-to-b from-amber-100 to-amber-300 dark:from-amber-900 dark:to-amber-700 rounded-b-full rounded-t-3xl relative overflow-hidden border-4 border-amber-300 dark:border-amber-600">
+            
+                            <div id="coffee-level" class="absolute bottom-0 w-full bg-amber-800 dark:bg-amber-900 transition-all duration-500" style="height: 70%;"></div>
+                            
+                            <div class="absolute top-0 w-full bg-white dark:bg-amber-200 opacity-80" style="height: 15%; border-radius: 50% 50% 0 0;"></div>
+                        </div>
+                        <div class="mt-4 text-sm text-gray-600 dark:text-gray-300" id="size-display">300ml</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b pb-2">
+                            <span>Base:</span>
+                            <span class="font-medium" id="grain-display">Robusta</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span>Leite:</span>
+                            <span class="font-medium" id="milk-display">Integral</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span>Adicionais:</span>
+                            <span class="font-medium" id="extras-display">Nenhum</span>
+                        </div>
+                        <div class="flex justify-between pt-4">
+                            <span class="font-bold">Total:</span>
+                            <span class="text-xl font-bold text-amber-800 dark:text-amber-600" id="total-price">R$ 15,90</span>
+                        </div>
+                    </div>
+                    
+                    <button id="add-to-cart" class="w-full mt-6 bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-medium transition-colors hidden">Adicionar ao Carrinho</button>
+                    
+                    <div id="success-message" class="mt-4 p-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg hidden">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Seu café foi adicionado ao carrinho!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coffees -->
+    <section class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Nossas <span class="text-amber-800 dark:text-amber-600">Criações</span></h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">Experimente nossa seleção de cafés especiais, cada um com seu perfil único de sabor e aroma.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Coffee 1 - Latte -->
+                <div class="coffee-card bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-600">
+                    <div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+                        <img src=" /*imagem da bebida*/ " alt="Latte" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Latte Cremoso</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Café espresso suave com leite vaporizado e uma fina camada de espuma, perfeito para quem aprecia texturas aveludadas.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-amber-800 dark:text-amber-600 font-bold">R$ 14,90</span>
+                        <button class="bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg text-sm font-medium">Adicionar</button>
+                    </div>
+                </div>
+                
+                <!-- Coffee 2 - Affogato -->
+                <div class="coffee-card bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-600">
+                    <div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+                        <img src=" /*imagem da bebida*/ " alt="Affogato" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Affogato</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Sorvete de baunilha artesanal afogado em espresso quente, uma combinação perfeita de quente e frio.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-amber-800 dark:text-amber-600 font-bold">R$ 19,90</span>
+                        <button class="bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg text-sm font-medium">Adicionar</button>
+                    </div>
+                </div>
+                
+                <!-- Coffee 3 - Frappuccino -->
+                <div class="coffee-card bg-white dark:bg-gray-700 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-600">
+                    <div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+                        <img src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Frappuccino" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Frappuccino Gelado</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Café gelado batido com leite e gelo, coberto com chantilly e calda de chocolate, ideal para dias quentes.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-amber-800 dark:text-amber-600 font-bold">R$ 18,50</span>
+                        <button class="bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg text-sm font-medium">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <img src=" /*logo da empresa*/ " alt="Coffee Lab" class="rounded-xl shadow-xl w-full">
+                </div>
+                <div class="md:w-1/2 md:pl-12">
+                    <h2 class="text-3xl font-bold mb-6">Sobre o <span class="text-amber-800 dark:text-amber-600">Coffee Lab</span></h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Fundado em 2015, o Coffee Lab nasceu da paixão por transformar o consumo de café em uma experiência sensacional única. Nossos mestres torrefadores e baristas trabalham em conjunto para extrair o melhor de cada grão.</p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-8">Trabalhamos diretamente com pequenos produtores de café especial, garantindo qualidade premium e práticas sustentáveis em toda nossa cadeia produtiva.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <div class="bg-amber-100 dark:bg-amber-900 p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-800 dark:text-amber-600" fill="none" viewBox="0 0 24 24", stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium">Grãos selecionados</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-amber-100 dark:bg-amber-900 p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-800 dark:text-amber-600" fill="none" viewBox="0 0 24 24", stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium">Torra artesanal</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-amber-100 dark:bg-amber-900 p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-800 dark:text-amber-600" fill="none", viewBox="0 0 24 24", stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                            </div>
+                            <span class="font-medium">Entrega rápida</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-amber-100 dark:bg-amber-900 p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-800 dark:text-amber-600" fill="none", viewBox="0 0 24 24", stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <span class="font-medium">Preço justo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-amber-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Coffee Lab</h3>
+                    <p class="text-amber-200">Transformando grãos em experiências sensacionais únicas desde 2015.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-amber-200 hover:text-white transition-colors">Início</a></li>
+                        <li><a href="#" class="text-amber-200 hover:text-white transition-colors">Menu</a></li>
+                        <li><a href="#custom-coffee" class="text-amber-200 hover:text-white transition-colors">Monte Seu Café</a></li>
+                        <li><a href="#" class="text-amber-200 hover:text-white transition-colors">Sobre Nós</a></li>
+                        <li><a href="#" class="text-amber-200 hover:text-white transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contato</h4>
+                    <ul class="space-y=2">
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none", viewBox="0 0 24 24", stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            (11) 9999-9999
+                        </li>
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr=2" fill="none", viewBox="0 0 24 24", stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            contato@coffeelab.com
+                        </li>
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none", viewBox="0 0 24 24", stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Rua do Café, 123 - SP
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Horário</h4>
+                    <ul class="space-y-2">
+                        <li class="flex justify-between">
+                            <span>Segunda-Sexta</span>
+                            <span>7h-20h</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Sábado</span>
+                            <span>8h-22h</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Domingo</span>
+                            <span>9h-18h</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-amber-800 mt-8 pt-8 text-center text-amber-200">
+                <p>&copy; 2023 Coffee Lab. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+       
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+        } else {
+            html.classList.remove('dark');
+            themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            let currentSelections = {
+                size: { value: '300ml', price: 15.90 },
+                grain: { value: 'Robusta', price: 2.00 },
+                milk: { value: 'Integral', price: 0 },
+                extras: []
+            };
+            
+            let totalPrice = 15.90 + 2.00; 
+            
+            function updatePreview() {
+                document.getElementById('size-display').textContent = currentSelections.size.value;
+                document.getElementById('grain-display').textContent = currentSelections.grain.value;
+                document.getElementById('milk-display').textContent = currentSelections.milk.value;
+                
+                if (currentSelections.extras.length > 0) {
+                    const extrasNames = currentSelections.extras.map(extra => extra.value).join(', ');
+                    document.getElementById('extras-display').textContent = extrasNames;
+                } else {
+                    document.getElementById('extras-display').textContent = 'Nenhum';
+                }
+                
+                let extrasTotal = currentSelections.extras.reduce((sum, extra) => sum + extra.price, 0);
+                totalPrice = currentSelections.size.price + currentSelections.grain.price + currentSelections.milk.price + extrasTotal;
+                
+                document.getElementById('total-price').textContent = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
+                
+                const coffeeLevel = document.getElementById('coffee-level');
+                if (currentSelections.size.value === '200ml') {
+                    coffeeLevel.style.height = '60%';
+                } else if (currentSelections.size.value === '300ml') {
+                    coffeeLevel.style.height = '70%';
+                } else if (currentSelections.size.value === '400ml') {
+                    coffeeLevel.style.height = '80%';
+                }
+            }
+            
+            const sizeOptions = document.querySelectorAll('#size-step .customization-option');
+            sizeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+
+                    sizeOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    this.classList.add('selected');
+                
+                    const sizeText = this.querySelector('div:first-child').textContent;
+                    const sizePrice = parseFloat(this.getAttribute('data-price'));
+                    currentSelections.size = { value: sizeText, price: sizePrice };
+                    
+                    updatePreview();
+                });
+            });
+            
+            const grainOptions = document.querySelectorAll('#grain-step .customization-option');
+            grainOptions.forEach(option => {
+                option.addEventListener('click', function() {
+
+                    grainOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    this.classList.add('selected');
+                    
+                    const grainText = this.querySelector('div:first-child').textContent;
+                    const grainPrice = parseFloat(this.getAttribute('data-price'));
+                    currentSelections.grain = { value: grainText, price: grainPrice };
+                    
+                    updatePreview();
+                });
+            });
+            
+            const milkOptions = document.querySelectorAll('#milk-step .customization-option');
+            milkOptions.forEach(option => {
+                option.addEventListener('click', function() {
+
+                    milkOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    this.classList.add('selected');
+                    
+                    const milkText = this.querySelector('div:first-child').textContent;
+                    const milkPrice = parseFloat(this.getAttribute('data-price'));
+                    currentSelections.milk = { value: milkText, price: milkPrice };
+                    
+                    updatePreview();
+                });
+            });
+            
+            const extraOptions = document.querySelectorAll('#extras-step .customization-option');
+            extraOptions.forEach(option => {
+                option.addEventListener('click', function() {
   
-  <div class='products-col'>
-  <h2>PRODUCTS</h2>
-    <br><br>
-  <div class='flex-grid'>
-    <div class="simpleCart_shelfItem col">
-  <img src='https://t4.ftcdn.net/jpg/13/96/00/59/240_F_1396005937_zbYEw3yyIm3UxTyGxXW8RLwvdoPtunVQ.jpg'>
-  <h6 class="item_name"> Frappuccino </h6>
-  <span class="item_price">R$24,90</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
-      </div>
-    
-    <div class="simpleCart_shelfItem col">
-  <img src='https://c1.staticflickr.com/4/3939/33987376465_3feff40be8_z.jpg' class='smaller-img img-responsive item_thumb'>
-  <h6 class="item_name"> Affogato </h6>
-  <span class="item_price">R$22,00</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
-    </div>
-    
-    <div class="simpleCart_shelfItem col">
-  <img src='https://c1.staticflickr.com/4/3947/33987376045_bab0901385_z.jpg' class='smaller-img img-responsive item_thumb'>
-  <h6 class="item_name"> Macchiato </h5>
-  <span class="item_price">R$19,80</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
-      </div>
-   
- <div class="simpleCart_shelfItem col">
-  <img src='https://c1.staticflickr.com/3/2923/33175563003_0e1f3027cb_z.jpg' class='smaller-img img-responsive item_thumb'>
-  <h6 class="item_name"> Expresso </h6>
-  <span class="item_price">R$7,90</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
-      </div>
-    
-    <div class="simpleCart_shelfItem col">
-  <img src='https://c1.staticflickr.com/3/2862/33175563343_d749df808e_z.jpg' class='smaller-img img-responsive item_thumb'>
-  <h6 class="item_name"> Cappuccino </h6>
-  <span class="item_price">R$31,70</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
-      </div>
-    
-    <div class="simpleCart_shelfItem col">
-  <img src='https://c1.staticflickr.com/3/2829/33175563553_800517b481_z.jpg' class='smaller-img img-responsive item_thumb'>
-  <h6 class="item_name"> Latte </h6>
-  <span class="item_price">R$19,00</span><br>
-  <a class="item_add" href="javascript:;"> Add to Cart </a>
+                    this.classList.toggle('selected');
+                    
+                    const extraText = this.querySelector('div:first-child').textContent;
+                    const extraPrice = parseFloat(this.getAttribute('data-price'));
+                    
+                    if (this.classList.contains('selected')) {
       
-    </div>
+                        currentSelections.extras.push({ value: extraText, price: extraPrice });
+                    } else {
+                       
+                        currentSelections.extras = currentSelections.extras.filter(
+                            extra => extra.value !== extraText
+                        );
+                    }
+                    
+                    updatePreview();
+                });
+            });
+            
+            document.getElementById('next-to-grain').addEventListener('click', function() {
+                document.getElementById('size-step').classList.add('hidden');
+                document.getElementById('grain-step').classList.remove('hidden');
+                
+                document.getElementById('step-1').classList.remove('active');
+                document.getElementById('step-1').classList.add('completed');
+                document.querySelectorAll('.progress-connector')[0].classList.add('completed');
+                document.getElementById('step-2').classList.add('active');
+            });
+            
+            document.getElementById('back-to-size').addEventListener('click', function() {
+                document.getElementById('grain-step').classList.add('hidden');
+                document.getElementById('size-step').classList.remove('hidden');
+                
+                document.getElementById('step-1').classList.add('active');
+                document.getElementById('step-1').classList.remove('completed');
+                document.querySelectorAll('.progress-connector')[0].classList.remove('completed');
+                document.getElementById('step-2').classList.remove('active');
+            });
+            
+            document.getElementById('next-to-milk').addEventListener('click', function() {
+                document.getElementById('grain-step').classList.add('hidden');
+                document.getElementById('milk-step').classList.remove('hidden');
+                
+                document.getElementById('step-2').classList.remove('active');
+                document.getElementById('step-2').classList.add('completed');
+                document.querySelectorAll('.progress-connector')[1].classList.add('completed');
+                document.getElementById('step-3').classList.add('active');
+            });
+            
+            document.getElementById('back-to-grain').addEventListener('click', function() {
+                document.getElementById('milk-step').classList.add('hidden');
+                document.getElementById('grain-step').classList.remove('hidden');
+                
+                document.getElementById('step-2').classList.add('active');
+                document.getElementById('step-2').classList.remove('completed');
+                document.querySelectorAll('.progress-connector')[1].classList.remove('completed');
+                document.getElementById('step-3').classList.remove('active');
+            });
+            
+            document.getElementById('next-to-extras').addEventListener('click', function() {
+                document.getElementById('milk-step').classList.add('hidden');
+                document.getElementById('extras-step').classList.remove('hidden');
+                
+                document.getElementById('step-3').classList.remove('active');
+                document.getElementById('step-3').classList.add('completed');
+                document.querySelectorAll('.progress-connector')[2].classList.add('completed');
+                document.getElementById('step-4').classList.add('active');
+            });
+            
+            document.getElementById('back-to-milk').addEventListener('click', function() {
+                document.getElementById('extras-step').classList.add('hidden');
+                document.getElementById('milk-step').classList.remove('hidden');
+                
+                document.getElementById('step-3').classList.add('active');
+                document.getElementById('step-3').classList.remove('completed');
+                document.querySelectorAll('.progress-connector')[2].classList.remove('completed');
+                document.getElementById('step-4').classList.remove('active');
+            });
+            
+            document.getElementById('finish-customization').addEventListener('click', function() {
+ 
+                document.getElementById('add-to-cart').classList.remove('hidden');
+                
+                document.getElementById('preview-cup').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('add-to-cart').addEventListener('click', function() {
     
-    
-</div>
-  </div>
-</div>
-</div>
+                const successMessage = document.getElementById('success-message');
+                successMessage.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                }, 3000);
+                
+                console.log('Added to cart:', currentSelections);
+            });
+        });
+    </script>
+</body>
+</html>
